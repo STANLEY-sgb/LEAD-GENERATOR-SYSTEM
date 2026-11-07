@@ -1,0 +1,76 @@
+openapi: 3.0.3
+info:
+  title: LeadPilot HTTP API
+  version: "1.0"
+  description: >
+    Public/machine endpoints. Application data operations use authenticated Next.js server actions
+    (not a public REST surface); all organization-scoped access is enforced by Postgres RLS.
+paths:
+  /api/health:
+    get:
+      summary: Deployment self-check (no secrets returned)
+      responses: { "200": { description: healthy }, "503": { description: not healthy / not configured } }
+  /api/public/forms/{key}:
+    post:
+      summary: Submit a consent-based lead form
+      parameters: [{ name: key, in: path, required: true, schema: { type: string } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, consent]
+              properties:
+                name: { type: string, maxLength: 160 }
+                email: { type: string, format: email }
+                phone: { type: string }
+                company: { type: string }
+                message: { type: string, maxLength: 2000 }
+                consent: { type: boolean, enum: [true] }
+      responses: { "200": { description: accepted }, "400": { description: validation error }, "404": { description: form not found }, "429": { description: rate limited } }
+  /api/public/webhook/{orgId}:
+    post:
+      summary: Signed inbound lead webhook
+      description: Header `x-leadpilot-signature` = hex HMAC-SHA256(secret, raw body).
+      parameters: [{ name: orgId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                leads:
+                  type: array
+                  maxItems: 100
+                  items:
+                    type: object
+                    properties:
+                      name: { type: string }
+                      email: { type: string }
+                      phone: { type: string }
+                      company: { type: string }
+                      website: { type: string }
+                      country: { type: string }
+                      industry: { type: string }
+                      message: { type: string }
+                      external_id: { type: string }
+                      consent_granted: { type: boolean }
+                      consent_evidence: { type: string }
+      responses: { "200": { description: "counts: created, duplicate, suppressed, rejected, limit_reached" }, "401": { description: bad signature }, "429": { description: rate limited } }
+  /api/worker/tick:
+    post:
+      summary: Run queued jobs (cron). Requires `Authorization: Bearer $CRON_SECRET`.
+      responses: { "200": { description: tick result }, "401": { description: unauthorized } }
+  /api/webhooks/stripe:
+    post:
+      summary: Stripe webhook (signature verified)
+      responses: { "200": { description: received }, "400": { description: invalid signature } }
+  /api/leads/export:
+    get:
+      summary: CSV export of the caller's leads (session auth, RLS scoped)
+      responses: { "200": { description: text/csv } }
+  /api/org/export:
+    get:
+      summary: Full JSON export of organization data (owner/admin)
+      responses: { "200": { description: application/json }, "403": { description: forbidden } }
