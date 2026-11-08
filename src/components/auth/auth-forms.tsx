@@ -51,19 +51,29 @@ export function LoginForm() {
 }
 
 export function RegisterForm() {
+  const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof registerSchema>>({ resolver: zodResolver(registerSchema) });
 
   async function onSubmit(v: z.infer<typeof registerSchema>) {
     setBusy(true);
-    const { error } = await createClient().auth.signUp({
+    const { data, error } = await createClient().auth.signUp({
       email: v.email,
       password: v.password,
       options: { data: { full_name: v.fullName }, emailRedirectTo: `${location.origin}/auth/callback?next=/onboarding` },
     });
     setBusy(false);
-    if (error) return void toast.error(error.message);
+    if (error) {
+      const limited = error.status === 429 || /rate limit/i.test(error.message);
+      return void toast.error(limited ? "Too many sign-up emails were sent recently. Please wait a while and try again, or contact support." : error.message);
+    }
+    if (data.user && data.user.identities?.length === 0) return void toast.error("An account with this email already exists. Try signing in.");
+    if (data.session) { // e-mail confirmation disabled in Supabase: already signed in
+      router.replace("/onboarding");
+      router.refresh();
+      return;
+    }
     setSent(true);
   }
 
