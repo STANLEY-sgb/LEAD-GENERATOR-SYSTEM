@@ -64,7 +64,7 @@ export function CampaignManager({ rows, canManage }: { rows: CampaignRow[]; canM
             )}
           </div>
           <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-5">
-            {[["Leads", c.stats.leads], ["Qualified", c.stats.qualified], ["Converted", c.stats.converted], ["Conversion", `${c.stats.rate}%`], ["Cost / lead", c.stats.cpl != null ? c.stats.cpl.toLocaleString() : "n/a"]].map(([k, v]) => <div key={String(k)}><dt className="text-xs uppercase text-muted">{k}</dt><dd className="text-xl font-bold">{v}</dd></div>)}
+            {[["Leads", c.stats.leads], ["Qualified", c.stats.qualified], ["Converted", c.stats.converted], ["Conversion", `${c.stats.rate}%`], ["Cost / lead", c.stats.cpl != null ? c.stats.cpl.toLocaleString("en-US") : "n/a"]].map(([k, v]) => <div key={String(k)}><dt className="text-xs uppercase text-muted">{k}</dt><dd className="text-xl font-bold">{v}</dd></div>)}
           </dl>
           {Object.keys(c.stats.bySource).length > 0 && <p className="text-xs text-muted">By source: {Object.entries(c.stats.bySource).map(([s, n]) => `${s} ${n}`).join(" · ")}</p>}
         </Card>

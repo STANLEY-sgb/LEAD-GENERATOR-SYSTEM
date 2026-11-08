@@ -76,7 +76,7 @@ export function LeadActions({ canWrite, aiEnabled, lead, stages, members, tags, 
         <div>
           <h2 className="mb-2 font-semibold">Notes</h2>
           {canWrite && <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); run(() => addNote(lead.id, note), "Note added", () => setNote("")); }}><Textarea aria-label="New note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Add a note…" /><Button type="submit" disabled={pending || !note.trim()}>Add</Button></form>}
-          <ul className="mt-3 space-y-2 text-sm">{notes.map((n) => <li key={n.id} className="rounded-lg bg-black/5 p-2 dark:bg-white/5"><p className="whitespace-pre-wrap">{n.body}</p><p className="text-xs text-muted">{n.by} · {new Date(n.at).toLocaleString()}</p></li>)}</ul>
+          <ul className="mt-3 space-y-2 text-sm">{notes.map((n) => <li key={n.id} className="rounded-lg bg-black/5 p-2 dark:bg-white/5"><p className="whitespace-pre-wrap">{n.body}</p><p className="text-xs text-muted">{n.by} · <time suppressHydrationWarning>{new Date(n.at).toLocaleString()}</time></p></li>)}</ul>
         </div>
 
         {canWrite && (
@@ -100,7 +100,7 @@ export function LeadActions({ canWrite, aiEnabled, lead, stages, members, tags, 
               <Button type="submit" variant="outline" disabled={pending || !task.title.trim() || !task.due}>Schedule</Button>
             </form>
           )}
-          <ul className="mt-3 space-y-1 text-sm">{tasks.map((t) => <li key={t.id} className="flex items-center gap-2"><input type="checkbox" disabled={!canWrite} checked={!!t.completed_at} aria-label={`Complete ${t.title}`} onChange={(e) => run(() => setTaskDone(t.id, e.target.checked))} /><span className={t.completed_at ? "line-through text-muted" : ""}>{t.title}</span><span className="text-xs text-muted">{new Date(t.due_at).toLocaleString()}</span></li>)}</ul>
+          <ul className="mt-3 space-y-1 text-sm">{tasks.map((t) => <li key={t.id} className="flex items-center gap-2"><input type="checkbox" disabled={!canWrite} checked={!!t.completed_at} aria-label={`Complete ${t.title}`} onChange={(e) => run(() => setTaskDone(t.id, e.target.checked))} /><span className={t.completed_at ? "line-through text-muted" : ""}>{t.title}</span><span className="text-xs text-muted"><time suppressHydrationWarning>{new Date(t.due_at).toLocaleString()}</time></span></li>)}</ul>
         </div>
       </Card>
     </div>

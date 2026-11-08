@@ -118,7 +118,7 @@ export function AutomationCenter({ workflows, executions, canManage, stages, mem
             {executions.map((e) => (
               <div key={e.id} className="flex flex-wrap items-center justify-between gap-2 p-3 text-sm">
                 <div className="min-w-0"><p className="truncate font-medium">{e.workflow}{e.lead ? ` · ${e.lead}` : ""}</p>{e.error && <p className="text-xs text-red-600">{e.error}</p>}</div>
-                <div className="flex items-center gap-2"><Badge tone={e.status === "succeeded" ? "success" : e.status === "failed" ? "warning" : "neutral"}>{e.status}</Badge><span className="text-xs text-muted">{new Date(e.at).toLocaleString()}</span>
+                <div className="flex items-center gap-2"><Badge tone={e.status === "succeeded" ? "success" : e.status === "failed" ? "warning" : "neutral"}>{e.status}</Badge><span className="text-xs text-muted"><time suppressHydrationWarning>{new Date(e.at).toLocaleString()}</time></span>
                   {canManage && e.status === "failed" && <Button variant="outline" className="min-h-8 text-xs" disabled={pending} onClick={() => start(async () => done(await retryFailedExecution(e.id), "Retried"))}>Retry</Button>}</div>
               </div>
             ))}

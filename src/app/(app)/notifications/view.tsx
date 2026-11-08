@@ -34,7 +34,7 @@ export function NotificationsView({ items, prefs, emailReady }: { items: N[]; pr
             {items.map((n) => (
               <div key={n.id} className={`flex items-start justify-between gap-3 p-3 text-sm ${n.read_at ? "opacity-70" : ""}`}>
                 <div className="min-w-0">{!n.read_at && <span className="mr-2 inline-block size-2 rounded-full bg-accent" aria-label="unread" />}<b>{n.title}</b>{n.body && <p className="line-clamp-2 text-muted">{n.body}</p>}{n.link && <Link className="text-xs underline" href={n.link} onClick={() => { void markNotificationsRead([n.id]); }}>Open</Link>}</div>
-                <span className="shrink-0 text-xs text-muted">{new Date(n.created_at).toLocaleString()}</span>
+                <span className="shrink-0 text-xs text-muted"><time suppressHydrationWarning>{new Date(n.created_at).toLocaleString()}</time></span>
               </div>
             ))}
           </Card>

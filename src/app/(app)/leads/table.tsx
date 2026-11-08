@@ -88,7 +88,7 @@ export function LeadsTable({ rows, members, canWrite }: { rows: LeadRow[]; membe
                 {show("score") && <td className="p-3"><span className="mr-2 font-semibold">{r.score ?? "-"}</span><QualBadge q={r.qualification} /></td>}
                 {show("status") && <td className="p-3 capitalize">{r.status}</td>}
                 {show("assignee") && <td className="p-3">{r.assignee ?? <span className="text-muted">Unassigned</span>}</td>}
-                {show("created") && <td className="whitespace-nowrap p-3 text-muted">{new Date(r.created_at).toLocaleDateString()}</td>}
+                {show("created") && <td className="whitespace-nowrap p-3 text-muted"><time suppressHydrationWarning>{new Date(r.created_at).toLocaleDateString()}</time></td>}
               </tr>
             ))}
           </tbody>

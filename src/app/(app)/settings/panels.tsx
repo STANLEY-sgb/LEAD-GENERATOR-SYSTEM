@@ -42,7 +42,7 @@ export function SettingsPanels({ role, orgName, scoring, suppression, audit }: {
           <h2 className="font-semibold">Data &amp; privacy</h2>
           <p className="text-sm text-muted">Export everything your organization holds (leads, notes, activity, consent records, configuration) as JSON.</p>
           <a className="inline-flex min-h-10 items-center rounded-lg border border-border bg-card px-4 text-sm font-semibold" href="/api/org/export">Export organization data</a>
-          {audit.length > 0 && <details className="pt-2 text-sm"><summary className="cursor-pointer">Recent audit log</summary><ul className="mt-2 space-y-1">{audit.map((a) => <li key={a.id} className="flex justify-between"><span>{a.action}</span><span className="text-muted">{new Date(a.created_at).toLocaleString()}</span></li>)}</ul></details>}
+          {audit.length > 0 && <details className="pt-2 text-sm"><summary className="cursor-pointer">Recent audit log</summary><ul className="mt-2 space-y-1">{audit.map((a) => <li key={a.id} className="flex justify-between"><span>{a.action}</span><span className="text-muted"><time suppressHydrationWarning>{new Date(a.created_at).toLocaleString()}</time></span></li>)}</ul></details>}
         </Card>
       )}
 

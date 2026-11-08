@@ -18,7 +18,7 @@ function Card({ lead, dragging }: { lead: BoardLead; dragging?: boolean }) {
     <div className={cn("rounded-lg border border-border bg-card p-3 text-sm shadow-sm", dragging && "rotate-1 shadow-lg")}>
       <div className="flex items-start justify-between gap-2"><Link href={`/leads/${lead.id}`} className="min-w-0 truncate font-medium hover:underline" onPointerDown={(e) => e.stopPropagation()}>{lead.name}</Link><QualBadge q={lead.qualification} /></div>
       <p className="truncate text-xs text-muted">{lead.company ?? ""}</p>
-      <p className="mt-1 text-xs">Score {lead.score ?? "-"}{lead.est_value ? ` · ${lead.est_value.toLocaleString()}` : ""}</p>
+      <p className="mt-1 text-xs">Score {lead.score ?? "-"}{lead.est_value ? ` · ${lead.est_value.toLocaleString("en-US")}` : ""}</p>
     </div>
   );
 }
@@ -34,7 +34,7 @@ function Column({ stage, children, count, value, manage }: { stage: BoardStage; 
         <h2 className={cn("text-sm font-semibold", stage.kind === "won" && "text-green-700 dark:text-primary", stage.kind === "lost" && "text-red-600")}>{stage.name} <span className="text-muted">({count})</span></h2>
         {manage}
       </header>
-      {value > 0 && <p className="mb-2 px-1 text-xs text-muted">{value.toLocaleString()} est.</p>}
+      {value > 0 && <p className="mb-2 px-1 text-xs text-muted">{value.toLocaleString("en-US")} est.</p>}
       <div className="flex min-h-24 flex-col gap-2">{children}</div>
     </section>
   );

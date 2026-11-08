@@ -15,7 +15,7 @@ export function TaskRow({ t, canWrite }: { t: { id: string; title: string; type:
       <input type="checkbox" className="size-5" disabled={!canWrite || pending} aria-label={`Complete ${t.title}`} onChange={() => start(async () => { const r = await setTaskDone(t.id, true); if (r.ok) router.refresh(); else toast.error(r.error); })} />
       <div className="min-w-0 flex-1"><p className="truncate font-medium">{t.title}</p><p className="truncate text-xs text-muted">{t.lead && t.leadId ? <Link className="underline" href={`/leads/${t.leadId}`}>{t.lead}</Link> : "No lead"} · {t.who}</p></div>
       <Badge className="capitalize">{t.type.replace("_", " ")}</Badge>
-      <span className={`whitespace-nowrap text-xs ${t.overdue ? "font-semibold text-red-600" : "text-muted"}`}>{new Date(t.due).toLocaleString()}</span>
+      <span className={`whitespace-nowrap text-xs ${t.overdue ? "font-semibold text-red-600" : "text-muted"}`}><time suppressHydrationWarning>{new Date(t.due).toLocaleString()}</time></span>
     </div>
   );
 }
